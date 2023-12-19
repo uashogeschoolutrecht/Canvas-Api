@@ -1,63 +1,4 @@
----
-title: Canvas API
-author: Anne Leemans
-echo: true
----
 
-# Canvas-Api
-
-Dap client documentation [here](https://data-access-platform-api.s3.amazonaws.com/client/index.html)
-### DONE
-Function for loading client id and secret from keyvault
-
-```{sql}
-def getAzureKey(vault, key):
-    '''Retrieve keys from the Azure keyvault with the vault name and key name'''
-    from azure.keyvault.secrets import SecretClient
-    from azure.identity import AzurePowerShellCredential
-    
-    #get credentials
-    credential = AzurePowerShellCredential() 
-    client = SecretClient(vault_url=f'https://{vault}.vault.azure.net', credential=credential)
-    retrieved_secret = client.get_secret(name=key)
-    
-    return retrieved_secret.value
-```
-
-### Script for loading acces token
-```{sql}
-def getCanvasAccessToken(client_id, clien_secret):
-    import requests
-    # Replace these with your actual values
-
-    # Get Access Token
-    token_url = 'https://api-gateway.instructure.com/ids/auth/login'
-    token_data = {
-        'grant_type': 'client_credentials'
-    }
-
-    response = requests.post(
-        token_url,
-        auth=(client_id, clien_secret),
-        data=token_data
-    )
-
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        access_token = response.json().get('access_token')
-        from datetime import datetime, timedelta
-        expdat = (datetime.now() + timedelta(hours=1)).strftime("%d/%m/%Y at %H:%M:%S")
-        print(f'Retrieved access token succesfully: expires on {expdat}', )
-        return access_token
-    else:
-        print('Failed to obtain Access Token. Status code:', response.status_code)
-        print('Response:', response.text)
-        exit()
-```
-
-
-### Script for loading all table info
-```{sql}
 
 def getTableOverview(access_token):
     '''
@@ -80,13 +21,7 @@ def getTableOverview(access_token):
         print('Failed to make API call. Status code:', response.status_code)
         print('Response:', response.text)
 
-```
-
-
-### Script for loading table data job
-```{sql}
-
-def getTableJobInfo(table, acces_token, df_format='csv'):
+def getTableJobInfo(table, access_token, df_format='csv'):
     '''
     THis function initiates a job request for a specific table. A job will be quued to download a dataframe in 
     the required format (defualt is csv). Ones the job is finnished the files can be downloaded. 
@@ -96,7 +31,7 @@ def getTableJobInfo(table, acces_token, df_format='csv'):
 
     table_job_url = f'https://api-gateway.instructure.com/dap/query/canvas/table/{table}/data'
     headers = {
-        'x-instauth': acces_token,
+        'x-instauth': access_token,
         'Content-type' : 'application/json'
     }
     data = {
@@ -115,12 +50,8 @@ def getTableJobInfo(table, acces_token, df_format='csv'):
         print('Failed to make API call. Status code:', request_table.status_code)
         print('Response:', request_table.text)
 
-```
-
-
-### Script for checking job status
-```{sql}
-def checkJobStatus(job_id,acces_token):
+# check job status
+def checkJobStatus(job_id,access_token):
     '''
     A request is send to the server with the retreieved ID and checks if the job is ready.
     Once te job is ready the next script can be invoked
@@ -131,7 +62,7 @@ def checkJobStatus(job_id,acces_token):
     status_url = f'https://api-gateway.instructure.com/dap/job/{job_id}'
 
     headers = {
-        'x-instauth': acces_token,
+        'x-instauth': access_token,
     }
 
     # wait till job status is done
@@ -152,18 +83,12 @@ def checkJobStatus(job_id,acces_token):
     # get object values of job
     return request_status.json()['objects']
 
-```
 
-
-### Script for downloading data to pandas dataframe
-
-```{sql}
-
-def tableToPandasDataframe(acces_token, objects):
+def tableToPandasDataframe(access_token, objects):
     import requests
         # now we can start downloading the different files
     headers = {
-        'x-instauth': acces_token,
+        'x-instauth': access_token,
         'Content-type' : 'application/json'
     }
     # Make a POST request to the API
@@ -208,12 +133,3 @@ def tableToPandasDataframe(acces_token, objects):
         df = pd.concat([temp,df], ignore_index=True)
 
     return df
-```
-
-
-
-### TO DO
-Set filter in table select function
-Error logging 
-Extended documentation
-Set timer for acces token and intitiate new call after 1 hour
