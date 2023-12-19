@@ -1,6 +1,6 @@
 # Canvas-Api
-
 Dap client documentation [here](https://data-access-platform-api.s3.amazonaws.com/client/index.html)
+
 ### DONE
 Function for loading client id and secret from keyvault
 
