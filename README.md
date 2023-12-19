@@ -1,9 +1,3 @@
----
-title: Canvas API
-author: Anne Leemans
-echo: true
----
-
 # Canvas-Api
 
 Dap client documentation [here](https://data-access-platform-api.s3.amazonaws.com/client/index.html)
