@@ -10,7 +10,7 @@ Dap client documentation [here](https://data-access-platform-api.s3.amazonaws.co
 ### DONE
 Function for loading client id and secret from keyvault
 
-```{sql}
+```python
 def getAzureKey(vault, key):
     '''Retrieve keys from the Azure keyvault with the vault name and key name'''
     from azure.keyvault.secrets import SecretClient
@@ -25,7 +25,7 @@ def getAzureKey(vault, key):
 ```
 
 ### Script for loading acces token
-```{sql}
+```python
 def getCanvasAccessToken(client_id, clien_secret):
     import requests
     # Replace these with your actual values
@@ -57,7 +57,7 @@ def getCanvasAccessToken(client_id, clien_secret):
 
 
 ### Script for loading all table info
-```{sql}
+```python
 
 def getTableOverview(access_token):
     '''
@@ -84,7 +84,7 @@ def getTableOverview(access_token):
 
 
 ### Script for loading table data job
-```{sql}
+```python
 
 def getTableJobInfo(table, acces_token, df_format='csv'):
     '''
@@ -119,7 +119,7 @@ def getTableJobInfo(table, acces_token, df_format='csv'):
 
 
 ### Script for checking job status
-```{sql}
+```python
 def checkJobStatus(job_id,acces_token):
     '''
     A request is send to the server with the retreieved ID and checks if the job is ready.
@@ -157,7 +157,7 @@ def checkJobStatus(job_id,acces_token):
 
 ### Script for downloading data to pandas dataframe
 
-```{sql}
+```python
 
 def tableToPandasDataframe(acces_token, objects):
     import requests
