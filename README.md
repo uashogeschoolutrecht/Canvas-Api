@@ -1,6 +1,15 @@
 # Canvas-Api
 Dap client documentation [here](https://data-access-platform-api.s3.amazonaws.com/client/index.html)
 
+### TO DO
+
+* Set filter in table select function
+* Error logging 
+* Extended documentation
+* Set timer for acces token and intitiate new call after 1 hour
+
+
+
 ### DONE
 Function for loading client id and secret from keyvault
 
@@ -204,10 +213,3 @@ def tableToPandasDataframe(acces_token, objects):
     return df
 ```
 
-
-
-### TO DO
-Set filter in table select function
-Error logging 
-Extended documentation
-Set timer for acces token and intitiate new call after 1 hour
