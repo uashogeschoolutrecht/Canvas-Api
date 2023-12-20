@@ -12,8 +12,11 @@ def getAzureKey(vault, key):
 
 
 def getCanvasAccessToken(client_id, clien_secret):
+    '''
+    Loads an overview of all available tables from the data acces platform.
+   	'''
     import requests
-    # Replace these with your actual values
+    
 
     # Get Access Token
     token_url = 'https://api-gateway.instructure.com/ids/auth/login'
@@ -30,6 +33,8 @@ def getCanvasAccessToken(client_id, clien_secret):
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
         access_token = response.json().get('access_token')
+
+        # add expiration time for token
         from datetime import datetime, timedelta
         expdat = (datetime.now() + timedelta(hours=1)).strftime("%d/%m/%Y at %H:%M:%S")
         print(f'Retrieved access token succesfully: expires on {expdat}', )
