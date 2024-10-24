@@ -1,10 +1,10 @@
 def getAzureKey(vault, key):
     '''Retrieve keys from the Azure keyvault with the vault name and key name'''
     from azure.keyvault.secrets import SecretClient
-    from azure.identity import AzurePowerShellCredential
+    from azure.identity import DefaultAzureCredential
     
     #get credentials
-    credential = AzurePowerShellCredential() 
+    credential = DefaultAzureCredential() 
     client = SecretClient(vault_url=f'https://{vault}.vault.azure.net', credential=credential)
     retrieved_secret = client.get_secret(name=key)
     
